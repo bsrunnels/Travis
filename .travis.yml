@@ -1,3 +1,5 @@
+language: generic
+
 before_script:
   - touch before_script_${DIM} && ls
 before_install:
