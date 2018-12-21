@@ -1,4 +1,4 @@
-language: cpp
+language: generic
 
 stages:
   - compile-amrex
@@ -12,10 +12,10 @@ env:
 jobs:
   include:
     - stage: compile-amrex
-      script: echo "Compiling amrex now! with dim=$(DIM)"
+      script: echo "Compiling amrex now! with dim=" ${DIM}
     - stage: compile-alamo
-      script: echo "Compiling alamo now! with dim=$(DIM)"
+      script: echo "Compiling alamo now! with dim=" ${DIM}
     - stage: test
-      script: echo "Testing now with dim=$(DIM)"
+      script: echo "Testing now with dim=" ${DIM}
 
 #script: bash .hello.sh
