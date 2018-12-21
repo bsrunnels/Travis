@@ -4,11 +4,11 @@ before_script:
   - touch before_script_${DIM} && ls
 before_install:
   - touch before_install_${DIM} && ls
-env:
-  - DIM=2
-  - DIM=3
 compile:
   - touch compile_${DIM} && ls
 test:
   - touch test_${DIM} && ls
+env:
+  - DIM=2
+  - DIM=3
 
