@@ -1,23 +1,16 @@
 language: generic
 
-before_script:
-  - touch before_script_${DIM} && ls
 before_install:
   - touch before_install_${DIM} && ls
+install:
+  - touch install_${DIM} && ls
+compile:
+  - touch compile_${DIM} && ls
+before_script:
+  - touch before_script_${DIM} && ls
+script:
+  - touch script_${DIM} && ls
 
-stages:
-  - compile
-  - test
-  - deploy
 env:
   - DIM=one
   - DIM=two
-jobs:
-  include:
-    - stage: compile
-      script: touch compile_${DIM} && ls
-    - stage: test
-      script: touch test_${DIM} && ls
-    - stage: deploy
-      script: touch compile_${DIM} && ls
-
