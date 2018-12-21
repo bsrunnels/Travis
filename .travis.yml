@@ -4,8 +4,8 @@ before_install:
   - touch before_install_${DIM} && ls
 install:
   - touch install_${DIM} && ls
-compile:
-  - touch compile_${DIM} && ls
+build:
+  - touch build_${DIM} && ls
 before_script:
   - touch before_script_${DIM} && ls
 script:
