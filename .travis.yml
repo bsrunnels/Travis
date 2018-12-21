@@ -5,17 +5,17 @@ stages:
   - compile-alamo
   - test
 
-dimensions:
-  - 2
-  - 3
+env:
+  - DIM=2
+  - DIM=3
 
 jobs:
   include:
     - stage: compile-amrex
-      script: echo "Compiling amrex now!"
+      script: echo "Compiling amrex now! with dim=$(DIM)"
     - stage: compile-alamo
-      script: echo "Compiling alamo now!"
+      script: echo "Compiling alamo now! with dim=$(DIM)"
     - stage: test
-      script: echo "Testing now"
+      script: echo "Testing now with dim=$(DIM)"
 
 #script: bash .hello.sh
