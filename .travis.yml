@@ -1,3 +1,21 @@
 language: cpp
 
-script: bash .hello.sh
+stages:
+  - compile-amrex
+  - compile-alamo
+  - test
+
+dimensions:
+  - 2
+  - 3
+
+jobs:
+  include:
+    - stage: compile-amrex
+      script: echo "Compiling amrex now!"
+    - stage: compile-alamo
+      script: echo "Compiling alamo now!"
+    - stage: test
+      script: echo "Testing now"
+
+#script: bash .hello.sh
