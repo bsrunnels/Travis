@@ -12,10 +12,10 @@ env:
 jobs:
   include:
     - stage: compile-amrex
-      script: echo "Compiling amrex now! with dim=" ${DIM}
+      script: echo "Compiling amrex now! with dim=" ${DIM} && touch amrexcompile${DIM} && ls
     - stage: compile-alamo
-      script: echo "Compiling alamo now! with dim=" ${DIM}
+      script: echo "Compiling alamo now! with dim=" ${DIM} && touch alamocompile${DIM} && ls
     - stage: test
-      script: echo "Testing now with dim=" ${DIM}
+      script: echo "Testing now with dim=" ${DIM} && ls
 
 #script: bash .hello.sh
