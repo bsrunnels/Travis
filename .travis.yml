@@ -6,9 +6,11 @@ before_install:
   - touch before_install_${DIM} && ls
 compile:
   - touch compile_${DIM} && ls
-test:
-  - touch test_${DIM} && ls
 env:
   - DIM=2
   - DIM=3
 
+jobs:
+  include:
+    - stage: Test
+      script: touch test_${DIM} && ls
