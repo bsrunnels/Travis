@@ -14,7 +14,7 @@ install:
   - sudo apt-get install -qq g++-6 
   - sudo update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-6 90
   - cd /usr/lib/gcc/x86_64-linux-gnu/4.6
-  - sudo ln -s /usr/lib/gcc/x86_64-linux-gnu/4.8/libgfortran.a libgfortran.a
   - find /usr/lib/gcc/x86_64-linux-gnu/ -name libgfortran.a
+  - sudo ln -s /usr/lib/gcc/x86_64-linux-gnu/4.8/libgfortran.a libgfortran.a
   - mpicxx test.cpp -lgfortran
 
