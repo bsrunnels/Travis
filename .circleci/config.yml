@@ -13,8 +13,6 @@ jobs:
     steps:
       - checkout
       - run:
-          name: "C++"
-      - run:
           name: Compile
           command: g++ test.cpp
       - run:
