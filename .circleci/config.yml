@@ -3,7 +3,7 @@ dependencies:
   - sudo  
 
 jobs:
-  pre-install:
+  build2d:
     docker:
       - image: buildpack-deps:trusty 
     steps:
@@ -19,11 +19,38 @@ jobs:
                     apt-get install -qq g++-6  &&
                     update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-6 90 &&
                     apt-get install -y mpich2 libmpich-dev gfortran libeigen3-dev'
-  build:
       - run:
           name: Compile
           command: g++ test.cpp
-  test:
       - run:
           name: Run
           command: ./a.out
+  build3d:
+    docker:
+      - image: buildpack-deps:trusty 
+    steps:
+      - checkout
+      - run:
+          name: Installing SUDO
+          command: 'apt-get update && 
+                    apt-get install -qq software-properties-common'
+      - run:
+          name: "Installing g++ 6"
+          command: 'add-apt-repository -y ppa:ubuntu-toolchain-r/test &&
+                    apt-get update -qq &&
+                    apt-get install -qq g++-6  &&
+                    update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-6 90 &&
+                    apt-get install -y mpich2 libmpich-dev gfortran libeigen3-dev'
+      - run:
+          name: Compile
+          command: g++ test.cpp
+      - run:
+          name: Run
+          command: ./a.out
+
+workflows:
+  version: 2
+  build:
+    jobs:
+      - "build2d"
+      - "build3d"
