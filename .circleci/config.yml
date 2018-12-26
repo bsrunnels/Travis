@@ -11,7 +11,7 @@ jobs:
       - run:
           name: Installing SUDO
           command: 'apt-get update && 
-                    apt-get install software-properties-common'
+                    apt-get install -qq software-properties-common'
       - run:
           name: "Installing g++ 6"
           command: 'add-apt-repository -y ppa:ubuntu-toolchain-r/test &&
