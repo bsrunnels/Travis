@@ -1,0 +1,58 @@
+name: Hello World with Cached Dependencies
+
+on:
+  push:
+    branches-ignore:
+      - "candidate-install"
+
+jobs:
+  install-dependencies:
+    runs-on: ubuntu-latest
+    outputs:
+      cache-hit: ${{ steps.cache.outputs.cache-hit }}
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v3
+
+      - name: Get OS Version
+        id: os-version
+        run: echo "os_version=$(lsb_release -cs)" >> $GITHUB_ENV
+
+      - name: Cache Dependencies
+        id: cache
+        uses: actions/cache@v3
+        with:
+          path: dependencies-cache
+          key: dependencies-${{ env.os_version }}-${{ hashFiles('dependencies-install.sh') }}
+
+      - name: Install Dependencies (if needed)
+        if: steps.cache.outputs.cache-hit != 'true'
+        run: |
+          mkdir -p dependencies-cache
+          chmod +x dependencies-install.sh
+          ./dependencies-install.sh dependencies-cache
+
+      - name: Save Environment Variables
+        run: echo "DEPENDENCIES_DIR=$PWD/dependencies-cache" >> $GITHUB_ENV
+
+  run-tasks:
+    needs: install-dependencies
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v3
+
+      - name: Restore Dependencies Cache
+        uses: actions/cache@v3
+        with:
+          path: dependencies-cache
+          key: dependencies-${{ env.os_version }}-${{ hashFiles('dependencies-install.sh') }}
+
+      - name: Use Dependencies
+        run: |
+          echo "Using dependencies from $DEPENDENCIES_DIR"
+          export PATH=$DEPENDENCIES_DIR/bin:$PATH
+          export LD_LIBRARY_PATH=$DEPENDENCIES_DIR/lib:$LD_LIBRARY_PATH
+          python3 --version
+          npm --version
+          echo "Dependencies are available!"
