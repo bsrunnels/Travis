@@ -1,10 +1,13 @@
-name: Cache Dependencies v2
+name: Cache Dependencies
 
 on:
   workflow_dispatch:
   push:
     branches:
-      - master
+      - main
+  pull_request:
+    branches:
+      - main
 
 jobs:
   build:
@@ -23,15 +26,6 @@ jobs:
           restore-keys: |
             apt-cache-{{ runner.os }}-
 
-      - name: Install apt dependencies
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y --no-install-recommends \
-            build-essential \
-            g++ gfortran \
-            libmpich-dev libmpich12 mpich libeigen3-dev libpng-dev \
-            python3-pip npm lcov doxygen
-
       - name: Cache pip dependencies
         id: pip-cache
         uses: actions/cache@v2
@@ -39,19 +33,12 @@ jobs:
           path: ~/.cache/pip
           key: pip-cache-{{ runner.os }}-{{ hashFiles('**/requirements.txt') }}
 
-      - name: Install Python dependencies
-        run: |
-          pip3 install -r requirements.txt
-
       - name: Cache npm dependencies
         id: npm-cache
         uses: actions/cache@v2
         with:
           path: ~/.npm
           key: npm-cache-{{ runner.os }}-{{ hashFiles('package-lock.json') }}
-
-      - name: Install npm dependencies
-        run: npm install
 
       - name: Run dependencies.sh script
         run: |
@@ -74,15 +61,6 @@ jobs:
           restore-keys: |
             apt-cache-{{ runner.os }}-
 
-      - name: Use cached apt dependencies
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y --no-install-recommends \
-            build-essential \
-            g++ gfortran \
-            libmpich-dev libmpich12 mpich libeigen3-dev libpng-dev \
-            python3-pip npm lcov doxygen
-
       - name: Restore pip cache
         uses: actions/cache@v2
         with:
@@ -91,10 +69,6 @@ jobs:
           restore-keys: |
             pip-cache-{{ runner.os }}-
 
-      - name: Use cached Python dependencies
-        run: |
-          pip3 install -r requirements.txt
-
       - name: Restore npm cache
         uses: actions/cache@v2
         with:
@@ -102,9 +76,6 @@ jobs:
           key: npm-cache-{{ runner.os }}-{{ hashFiles('package-lock.json') }}
           restore-keys: |
             npm-cache-{{ runner.os }}-
-
-      - name: Use cached npm dependencies
-        run: npm install
 
       - name: Run tests (or other build steps)
         run: |
