@@ -28,14 +28,14 @@ jobs:
 
       - name: Cache pip dependencies
         id: pip-cache
-        uses: actions/cache@v2
+        uses: actions/cache@v4
         with:
           path: ~/.cache/pip
           key: pip-cache-{{ runner.os }}-{{ hashFiles('**/requirements.txt') }}
 
       - name: Cache npm dependencies
         id: npm-cache
-        uses: actions/cache@v2
+        uses: actions/cache@v4
         with:
           path: ~/.npm
           key: npm-cache-{{ runner.os }}-{{ hashFiles('package-lock.json') }}
@@ -51,7 +51,7 @@ jobs:
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
 
       - name: Restore apt cache
         uses: actions/cache@v4
@@ -70,7 +70,7 @@ jobs:
             pip-cache-{{ runner.os }}-
 
       - name: Restore npm cache
-        uses: actions/cache@v2
+        uses: actions/cache@v4
         with:
           path: ~/.npm
           key: npm-cache-{{ runner.os }}-{{ hashFiles('package-lock.json') }}
