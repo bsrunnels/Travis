@@ -23,17 +23,17 @@ jobs:
         uses: actions/cache@v3
         with:
           path: dependencies-cache
-          key: dependencies-${{ env.os_version }}-${{ hashFiles('dependencies.sh') }}
+          key: dependencies-${{ env.os_version }}-${{ hashFiles('.github/workflows/dependencies.sh') }}
 
       - name: Install Dependencies (if needed)
         if: steps.cache.outputs.cache-hit != 'true'
         run: |
-          mkdir -p dependencies-cache
-          chmod +x dependencies.sh
-          ./dependencies.sh dependencies-cache
+          mkdir -p .github/workflows/dependencies-cache
+          chmod +x .github/workflows/dependencies.sh
+          .github/workflows/dependencies.sh .github/workflows/dependencies-cache
 
       - name: Save Environment Variables
-        run: echo "DEPENDENCIES_DIR=$PWD/dependencies-cache" >> $GITHUB_ENV
+        run: echo "DEPENDENCIES_DIR=.github/workflows/dependencies-cache" >> $GITHUB_ENV
 
   run-tasks:
     needs: install-dependencies
@@ -46,7 +46,7 @@ jobs:
         uses: actions/cache@v3
         with:
           path: dependencies-cache
-          key: dependencies-${{ env.os_version }}-${{ hashFiles('dependencies.sh') }}
+          key: dependencies-${{ env.os_version }}-${{ hashFiles('.github/workflows/dependencies.sh') }}
 
       - name: Use Dependencies
         run: |
