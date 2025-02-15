@@ -1,4 +1,4 @@
-name: Cache Dependencies
+name: Cache Dependencies v2
 
 on:
   workflow_dispatch:
