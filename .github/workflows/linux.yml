@@ -19,7 +19,7 @@ jobs:
 
       - name: Cache apt dependencies
         id: apt-cache
-        uses: actions/cache@v2
+        uses: actions/cache@v4
         with:
           path: /tmp/apt-cache
           key: apt-cache-{{ runner.os }}-{{ hashFiles('**/dependencies.sh') }}
@@ -54,7 +54,7 @@ jobs:
         uses: actions/checkout@v2
 
       - name: Restore apt cache
-        uses: actions/cache@v2
+        uses: actions/cache@v4
         with:
           path: /tmp/apt-cache
           key: apt-cache-{{ runner.os }}-{{ hashFiles('**/dependencies.sh') }}
