@@ -9,31 +9,28 @@ jobs:
   install-dependencies:
     runs-on: ubuntu-latest
     outputs:
-      cache-hit: ${{ steps.cache.outputs.cache-hit }}
+      cache-hit: ${{ steps.cache.outputs.cache-hit }} # Pass cache info to the next job
     steps:
       - name: Checkout Code
         uses: actions/checkout@v3
-
-      - name: Get OS Version
-        id: os-version
-        run: echo "os_version=$(lsb_release -cs)" >> $GITHUB_ENV
 
       - name: Cache Dependencies
         id: cache
         uses: actions/cache@v3
         with:
-          path: dependencies-cache
-          key: dependencies-${{ env.os_version }}-${{ hashFiles('.github/workflows/dependencies.sh') }}
+          path: |
+            /var/cache/apt
+            /var/lib/apt
+            ~/.cache/pip
+            ~/.npm
+            /usr/local/lib/node_modules
+          key: dependencies-${{ runner.os }}-${{ runner.image }}-${{ hashFiles('.github/workflows/dependencies.sh') }}
 
       - name: Install Dependencies (if needed)
         if: steps.cache.outputs.cache-hit != 'true'
         run: |
-          mkdir -p .github/workflows/dependencies-cache
           chmod +x .github/workflows/dependencies.sh
-          .github/workflows/dependencies.sh .github/workflows/dependencies-cache
-
-      - name: Save Environment Variables
-        run: echo "DEPENDENCIES_DIR=.github/workflows/dependencies-cache" >> $GITHUB_ENV
+          ./.github/workflows/dependencies.sh
 
   run-tasks:
     needs: install-dependencies
@@ -45,14 +42,16 @@ jobs:
       - name: Restore Dependencies Cache
         uses: actions/cache@v3
         with:
-          path: dependencies-cache
-          key: dependencies-${{ env.os_version }}-${{ hashFiles('.github/workflows/dependencies.sh') }}
+          path: |
+            /var/cache/apt
+            /var/lib/apt
+            ~/.cache/pip
+            ~/.npm
+            /usr/local/lib/node_modules
+          key: dependencies-${{ runner.os }}-${{ runner.image }}-${{ hashFiles('.github/workflows/dependencies.sh') }}
 
       - name: Use Dependencies
         run: |
-          echo "Using dependencies from $DEPENDENCIES_DIR"
-          export PATH=$DEPENDENCIES_DIR/bin:$PATH
-          export LD_LIBRARY_PATH=$DEPENDENCIES_DIR/lib:$LD_LIBRARY_PATH
+          echo "Dependencies are available!"
           python3 --version
           npm --version
-          echo "Dependencies are available!"
