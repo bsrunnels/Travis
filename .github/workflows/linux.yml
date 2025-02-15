@@ -23,14 +23,14 @@ jobs:
         uses: actions/cache@v3
         with:
           path: dependencies-cache
-          key: dependencies-${{ env.os_version }}-${{ hashFiles('dependencies-install.sh') }}
+          key: dependencies-${{ env.os_version }}-${{ hashFiles('dependencies.sh') }}
 
       - name: Install Dependencies (if needed)
         if: steps.cache.outputs.cache-hit != 'true'
         run: |
           mkdir -p dependencies-cache
-          chmod +x dependencies-install.sh
-          ./dependencies-install.sh dependencies-cache
+          chmod +x dependencies.sh
+          ./dependencies.sh dependencies-cache
 
       - name: Save Environment Variables
         run: echo "DEPENDENCIES_DIR=$PWD/dependencies-cache" >> $GITHUB_ENV
@@ -46,7 +46,7 @@ jobs:
         uses: actions/cache@v3
         with:
           path: dependencies-cache
-          key: dependencies-${{ env.os_version }}-${{ hashFiles('dependencies-install.sh') }}
+          key: dependencies-${{ env.os_version }}-${{ hashFiles('dependencies.sh') }}
 
       - name: Use Dependencies
         run: |
